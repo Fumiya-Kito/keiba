@@ -1,0 +1,34 @@
+# Python固有のファイル・フォルダを無視
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# 仮想環境
+venv/
+env/
+.venv/
+.env/
+
+# コンパイル済みのPython拡張
+*.so
+
+# IDE/エディタ関連
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ホームディレクトリ内のdataフォルダを無視
+/data/
+
+# 一時ファイルやログ
+*.log
+*.tmp
+*.bak
+*.orig
+*.DS_Store
+
+# その他
+*.lock
+*.coverage
