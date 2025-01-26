@@ -4,7 +4,12 @@ from pathlib import Path
 from tqdm import tqdm
 from bs4 import BeautifulSoup
 
-def create_results(html_path_list: list[Path]) -> pd.DataFrame:
+
+def create_results(
+  html_path_list: list[Path],
+  save_dir: Path,
+  save_filename: str = "results.csv"
+) -> pd.DataFrame:
   """
   レースページのHTMLを読み込んでレース結果テーブルに加工
 
@@ -45,6 +50,9 @@ def create_results(html_path_list: list[Path]) -> pd.DataFrame:
   # valueだけ繋げる
   concat_df = pd.concat(dfs.values())
   concat_df.index.name = "race_id"
+  # 半角スペース除く
+  concat_df.columns.str.replace(" ", "")
+  concat_df.to_csv(save_dir / save_filename, sep="\t")
   return concat_df
 
 
