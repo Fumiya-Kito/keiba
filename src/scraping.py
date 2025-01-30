@@ -16,7 +16,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 
 # ローカル
-
+from src.constants import RACE_DETAIL_HTML_DIR
+from src.constants import HORSE_DETAIL_HTML_DIR
 
 def url_open_with_headers(url: str):
     headers = {
@@ -90,7 +91,7 @@ def scrape_race_ids(race_date_list: list[str]) -> list[str]:
     return race_id_list
 
 
-def scrape_race_detail_html(race_id_list: list[str], save_dir: Path) -> list[Path]:
+def scrape_race_detail_html(race_id_list: list[str], save_dir: Path = RACE_DETAIL_HTML_DIR) -> list[Path]:
     """
     レース詳細画面のHTMLの書出し & filepathリストを作成
 
@@ -112,6 +113,45 @@ def scrape_race_detail_html(race_id_list: list[str], save_dir: Path) -> list[Pat
 
         # scraping
         url = f"https://db.netkeiba.com/race/{race_id}"
+        html = url_open_with_headers(url)
+        time.sleep(1)
+
+        # write html
+        with open(filepath, "wb") as f:
+            f.write(html)
+
+        html_path_list.append(filepath)
+
+    return html_path_list
+
+
+
+def scrape_horse_detail_html(
+        horse_id_list: list[str], 
+        save_dir: Path = HORSE_DETAIL_HTML_DIR, 
+        skip: bool = True
+) -> list[Path]:
+    """
+    レース詳細画面のHTMLの書出し & filepathリストを作成
+
+    Args:
+      horse_id_list (list[str]): ["id1", ...]
+      save_dir (Path): 出力ディレクトリ
+    Return:
+      html_path_list (list[Path]): 書き出したファイルのパス
+    """
+    # ディレクトリの作成
+    save_dir.mkdir(parents=True, exist_ok=True)
+    html_path_list = []
+    for horse_id in tqdm(horse_id_list):
+        # file exists check
+        filepath = save_dir / f"{horse_id}.bin"
+        if filepath.is_file() and skip:
+            print("skipped", filepath)
+            continue
+
+        # scraping
+        url = f"https://db.netkeiba.com/horse/{horse_id}"
         html = url_open_with_headers(url)
         time.sleep(1)
 

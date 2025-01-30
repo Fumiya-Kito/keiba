@@ -5,10 +5,10 @@ from tqdm import tqdm
 from bs4 import BeautifulSoup
 
 
-def create_results(
+def create_race_results(
   html_path_list: list[Path],
   save_dir: Path,
-  save_filename: str = "results.csv"
+  save_filename: str = "race_results.csv"
 ) -> pd.DataFrame:
   """
   レースページのHTMLを読み込んでレース結果テーブルに加工
@@ -52,6 +52,42 @@ def create_results(
   concat_df.index.name = "race_id"
   # 半角スペース除く
   concat_df.columns.str.replace(" ", "")
+  save_dir.mkdir(parents=True, exist_ok=True)
+  concat_df.to_csv(save_dir / save_filename, sep="\t")
+  return concat_df
+
+
+
+
+def create_horse_results(
+  html_path_list: list[Path],
+  save_dir: Path,
+  save_filename: str = "horse_results.csv"
+) -> pd.DataFrame:
+  """
+  馬詳細ページのHTMLを読み込んで馬過去成績テーブルに加工
+
+  Args:
+    html_path_list (list[str]): HTMLのパス(pathをreadしてHTMLを取り出す)
+  Return:
+    results (list[pd.DataFrame]): 全HTMLの表をUnionしたもの
+  """
+  dfs = {}
+  for html_path in tqdm(html_path_list):
+    with open(html_path, "rb") as f:
+      horse_id = html_path.stem
+      html = f.read()
+      df = pd.read_html(html)[2]
+      df.index = [horse_id] * len(df) # horse_idをindexに(list * int = 繰り返しになる)
+      dfs[horse_id] = df
+    
+  # valueだけ繋げる
+  print(dfs)
+  concat_df = pd.concat(dfs.values())
+  concat_df.index.name = "horse_id"
+  # 半角スペース除く
+  concat_df.columns.str.replace(" ", "")
+  save_dir.mkdir(parents=True, exist_ok=True)
   concat_df.to_csv(save_dir / save_filename, sep="\t")
   return concat_df
 
