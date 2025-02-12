@@ -16,8 +16,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 
 # ローカル
-from src.constants import RACE_DETAIL_HTML_DIR
-from src.constants import HORSE_DETAIL_HTML_DIR
+# from constants import RACE_DETAIL_HTML_DIR
+# from constants import HORSE_DETAIL_HTML_DIR
 
 def url_open_with_headers(url: str):
     headers = {
@@ -91,7 +91,7 @@ def scrape_race_ids(race_date_list: list[str]) -> list[str]:
     return race_id_list
 
 
-def scrape_race_detail_html(race_id_list: list[str], save_dir: Path = RACE_DETAIL_HTML_DIR) -> list[Path]:
+def scrape_race_detail_html(race_id_list: list[str], save_dir: Path) -> list[Path]:
     """
     レース詳細画面のHTMLの書出し & filepathリストを作成
 
@@ -128,7 +128,7 @@ def scrape_race_detail_html(race_id_list: list[str], save_dir: Path = RACE_DETAI
 
 def scrape_horse_detail_html(
         horse_id_list: list[str], 
-        save_dir: Path = HORSE_DETAIL_HTML_DIR, 
+        save_dir: Path,
         skip: bool = True
 ) -> list[Path]:
     """
