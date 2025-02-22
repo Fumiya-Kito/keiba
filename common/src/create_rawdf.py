@@ -51,7 +51,7 @@ def create_race_results(
   concat_df = pd.concat(dfs.values())
   concat_df.index.name = "race_id"
   # 半角スペース除く
-  concat_df.columns.str.replace(" ", "")
+  concat_df.columns.str.replace(r"\s", "", regex=True)
   save_dir.mkdir(parents=True, exist_ok=True)
   concat_df.to_csv(save_dir / save_filename, sep="\t")
   return concat_df
