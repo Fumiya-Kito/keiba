@@ -1,6 +1,7 @@
 # 標準
 import re
 import time
+import random
 import traceback
 from urllib.request import urlopen, Request
 from pathlib import Path
@@ -76,7 +77,8 @@ def scrape_race_ids(race_date_list: list[str]) -> list[str]:
             )
             try:
                 driver.get(url)
-                time.sleep(1)  # 忘れない
+                sleep_time = random.uniform(1.0, 1.5)
+                time.sleep(sleep_time)  # 忘れない
                 li_list = driver.find_elements(By.CLASS_NAME, "RaceList_DataItem")
 
                 for li in li_list:
@@ -114,7 +116,8 @@ def scrape_race_detail_html(race_id_list: list[str], save_dir: Path) -> list[Pat
         # scraping
         url = f"https://db.netkeiba.com/race/{race_id}"
         html = url_open_with_headers(url)
-        time.sleep(1)
+        sleep_time = random.uniform(1.0, 1.5)
+        time.sleep(sleep_time)
 
         # write html
         with open(filepath, "wb") as f:
@@ -153,7 +156,8 @@ def scrape_horse_detail_html(
         # scraping
         url = f"https://db.netkeiba.com/horse/{horse_id}"
         html = url_open_with_headers(url)
-        time.sleep(1)
+        sleep_time = random.uniform(1.3, 1.8)
+        time.sleep(sleep_time)
 
         # write html
         with open(filepath, "wb") as f:
